@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  api_gateway:
+    build:
+      context: ./backend/api_gateway
+      dockerfile: Dockerfile
+    container_name: nowcart_api_gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - RETRIEVAL_SERVICE_URL=http://retrieval_service:8001
+      - SESSION_SERVICE_URL=http://session_service:8002
+      - RERANK_SERVICE_URL=http://rerank_service:8003
+      - SEARCH_SERVICE_URL=http://search_service:8004
+      - BUNDLE_SERVICE_URL=http://bundle_service:8005
+      - GUARDRAIL_SERVICE_URL=http://guardrail_service:8006
+    depends_on:
+      - retrieval_service
+      - session_service
+      - rerank_service
+      - search_service
+      - bundle_service
+      - guardrail_service
+    networks:
+      - nowcart_network
+
+  retrieval_service:
+    build:
+      context: ./backend/services/retrieval_service
+      dockerfile: Dockerfile
+    container_name: nowcart_retrieval_service
+    ports:
+      - "8001:8001"
+    networks:
+      - nowcart_network
+
+  session_service:
+    build:
+      context: ./backend/services/session_service
+      dockerfile: Dockerfile
+    container_name: nowcart_session_service
+    ports:
+      - "8002:8002"
+    networks:
+      - nowcart_network
+
+  rerank_service:
+    build:
+      context: ./backend/services/rerank_service
+      dockerfile: Dockerfile
+    container_name: nowcart_rerank_service
+    ports:
+      - "8003:8003"
+    networks:
+      - nowcart_network
+
+  search_service:
+    build:
+      context: ./backend/services/search_service
+      dockerfile: Dockerfile
+    container_name: nowcart_search_service
+    ports:
+      - "8004:8004"
+    networks:
+      - nowcart_network
+
+  bundle_service:
+    build:
+      context: ./backend/services/bundle_service
+      dockerfile: Dockerfile
+    container_name: nowcart_bundle_service
+    ports:
+      - "8005:8005"
+    networks:
+      - nowcart_network
+
+  guardrail_service:
+    build:
+      context: ./backend/services/guardrail_service
+      dockerfile: Dockerfile
+    container_name: nowcart_guardrail_service
+    ports:
+      - "8006:8006"
+    networks:
+      - nowcart_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nowcart_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_GATEWAY_URL=http://localhost:8000
+    depends_on:
+      - api_gateway
+    networks:
+      - nowcart_network
+
+networks:
+  nowcart_network:
+    driver: bridge
