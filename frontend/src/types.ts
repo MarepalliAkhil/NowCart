@@ -5,6 +5,7 @@ export interface Product {
   score: number;
   confidence_score?: number;
   category: string;
+  sub_category?: string;
   reason: string;
   ai_badge?: {
     type: 'style' | 'trending' | 'loved' | 'outfit' | 'new';

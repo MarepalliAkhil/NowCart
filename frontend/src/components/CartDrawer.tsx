@@ -197,10 +197,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <motion.button
                   onClick={onCheckout}
                   whileTap={{ scale: 0.96 }}
-                  className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-102"
+                  className="w-full py-3.5 rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-102 cursor-pointer"
+                  style={{ backgroundColor: '#6E2A3A', color: '#FFFFFF' }}
                 >
                   <span>Proceed to Checkout</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </motion.button>
               </div>
             )}

@@ -48,66 +48,68 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-          className="relative z-10 w-full max-w-4xl bg-white border border-gray-100 rounded-3xl shadow-2xl overflow-hidden my-8"
+          className="relative z-10 w-full max-w-4xl bg-white border border-subtle rounded-3xl shadow-2xl overflow-hidden my-8"
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+            className="absolute top-4 right-4 z-20 p-2.5 bg-bone hover:bg-subtle text-ink rounded-full transition-colors"
+            title="Close quick view"
           >
             <X className="w-5 h-5" />
           </button>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 sm:p-8">
-            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-gray-100 border border-gray-100 relative">
+            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-bone border border-subtle relative">
               <img
                 src={product.image_url}
                 alt={product.prod_name}
                 className="w-full h-full object-cover"
               />
-              <span className="absolute bottom-3 left-3 px-3 py-1 bg-white/90 backdrop-blur text-blue-700 text-[10px] font-mono font-bold rounded-full border border-blue-200">
+              <span className="absolute bottom-3 left-3 px-3 py-1 bg-white/95 backdrop-blur text-plum text-[10px] font-mono font-bold rounded-full border border-subtle shadow-xs">
                 {product.confidence_score}% Match
               </span>
             </div>
 
             <div className="space-y-6 flex flex-col justify-between">
               <div className="space-y-3">
-                <span className="text-xs font-black uppercase text-blue-600 tracking-wider">
+                <span className="text-xs font-black uppercase text-plum tracking-wider">
                   {product.brand || 'NowCart'}
                 </span>
-                <h2 className="text-2xl font-black text-gray-900 font-sans">{product.prod_name}</h2>
+                <h2 className="text-2xl font-black text-ink font-sans">{product.prod_name}</h2>
 
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 text-amber-500 text-xs font-bold">
-                    <Star className="w-4 h-4 fill-current" />
+                  <div className="flex items-center gap-1 text-ink text-xs font-bold">
+                    <Star className="w-4 h-4 fill-gold text-gold shrink-0" />
                     <span>{product.rating || 4.8}</span>
                   </div>
-                  <span className="text-gray-300">&bull;</span>
-                  <span className="text-xs text-gray-500 font-medium">{product.reviews_count || 120} reviews</span>
+                  <span className="text-subtle">&bull;</span>
+                  <span className="text-xs text-muted font-medium">{product.reviews_count || 120} verified reviews</span>
                 </div>
 
-                <div className="p-3 bg-gray-50 rounded-2xl flex items-baseline gap-3">
-                  <span className="text-2xl font-black text-gray-900 font-mono">${product.price?.toFixed(2)}</span>
+                <div className="p-4 bg-bone rounded-2xl border border-subtle flex items-baseline gap-3">
+                  <span className="text-2xl font-black text-ink font-mono">${product.price?.toFixed(2)}</span>
                   {product.original_price && (
-                    <span className="text-xs text-gray-400 line-through font-mono">${product.original_price.toFixed(2)}</span>
+                    <span className="text-xs text-muted line-through font-mono">${product.original_price.toFixed(2)}</span>
                   )}
                 </div>
 
-                <p className="text-xs text-gray-600 leading-relaxed">{product.description}</p>
+                <p className="text-xs text-muted leading-relaxed">{product.description}</p>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-gray-100">
+              <div className="space-y-4 pt-4 border-t border-subtle">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleAddToCart}
-                    className="flex-1 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all"
+                    className="flex-1 py-3.5 bg-plum hover:bg-plum-hover text-white rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-plum/20 transition-all hover:scale-102"
                   >
                     <ShoppingBag className="w-4 h-4" /> Add to Cart
                   </button>
                   <button
                     onClick={handleToggleWishlist}
                     className={`p-3.5 rounded-2xl border transition-colors ${
-                      storeIsWishlisted ? 'bg-rose-50 border-rose-200 text-rose-600' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                      storeIsWishlisted ? 'bg-rose-50 border-rose-200 text-error' : 'border-subtle text-ink hover:bg-bone'
                     }`}
+                    title={storeIsWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
                   >
                     <Heart className={`w-5 h-5 ${storeIsWishlisted ? 'fill-current' : ''}`} />
                   </button>

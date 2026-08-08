@@ -8,11 +8,13 @@ import { BrandGrid } from '../components/BrandGrid';
 import { ProductModal } from '../components/ProductModal';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { useNowCartStore } from '../store/useNowCartStore';
+import { getCartCrossSellRecommendations } from '../utils/recommendations';
 import { Product } from '../types';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const products = useNowCartStore((state) => state.products);
+  const cart = useNowCartStore((state) => state.cart);
   const recentlyViewed = useNowCartStore((state) => state.recentlyViewed);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -29,6 +31,17 @@ export const HomePage: React.FC = () => {
   const flashSaleProducts = products.slice(0, 5);
   const newArrivals = products.slice(5, 12);
   const bestSellers = [...products].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+  // Compute live recency-weighted cart cross-sell recommendations
+  const cartCrossSellItems = getCartCrossSellRecommendations(cart, products, 8);
+  const cartCrossSellProducts = cartCrossSellItems.map((rec) => ({
+    ...rec.product,
+    reason: rec.reason,
+    ai_badge: {
+      type: 'outfit' as const,
+      label: rec.reason,
+    },
+  }));
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -55,6 +68,16 @@ export const HomePage: React.FC = () => {
         products={products.slice(0, 8)}
         onOpenModal={(p) => setSelectedProductModal(p)}
       />
+
+      {cart.length > 0 && cartCrossSellProducts.length > 0 && (
+        <ProductCarousel
+          title="Goes Well With Your Cart"
+          subtitle={`Style pairing recommendations based on your active shopping bag`}
+          badge="STYLED FOR YOU"
+          products={cartCrossSellProducts}
+          onOpenModal={(p) => setSelectedProductModal(p)}
+        />
+      )}
 
       <ProductCarousel
         title="Trending right now"

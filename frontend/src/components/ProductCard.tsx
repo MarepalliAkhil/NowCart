@@ -163,20 +163,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenModal }
           <motion.button
             onClick={handleAddToCartClick}
             whileTap={{ scale: 0.95 }}
-            className="flex-1 py-2.5 bg-ink hover:bg-plum text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-sm"
+            className="flex-1 py-2.5 rounded-2xl font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-plum/20 hover:scale-102 cursor-pointer"
+            style={{ backgroundColor: '#6E2A3A', color: '#FFFFFF' }}
           >
-            <ShoppingBag className="w-3.5 h-3.5" /> Add to Cart
+            <ShoppingBag className="w-3.5 h-3.5 text-white" /> Add to Cart
           </motion.button>
 
           <motion.button
             onClick={handleCompareClick}
             whileTap={{ scale: 0.9 }}
-            className={`p-2.5 rounded-2xl border transition-colors ${
-              isComparing ? 'bg-plum-light border-plum/30 text-plum' : 'border-subtle text-muted hover:text-ink'
+            className={`p-2.5 rounded-2xl border transition-all ${
+              isComparing ? 'bg-plum text-white border-plum shadow-xs scale-105' : 'bg-white border-subtle text-ink hover:bg-bone hover:border-plum'
             }`}
-            title="Compare item"
+            title={isComparing ? 'Comparing this item' : 'Add to compare list'}
           >
-            <ArrowRightLeft className="w-3.5 h-3.5" />
+            <ArrowRightLeft className={`w-3.5 h-3.5 ${isComparing ? 'text-white' : 'text-ink'}`} />
           </motion.button>
         </div>
 

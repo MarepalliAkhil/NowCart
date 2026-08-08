@@ -163,64 +163,77 @@ export const ProductDetailPage: React.FC = () => {
             {/* Size Swatch Selection */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-ink">
+                <label className="block text-xs font-bold uppercase tracking-wider text-ink" style={{ color: '#1C1B19' }}>
                   Select Size
                 </label>
-                <span className="text-[11px] font-semibold text-plum hover:underline cursor-pointer">
+                <span className="text-[11px] font-semibold text-plum hover:underline cursor-pointer" style={{ color: '#6E2A3A' }}>
                   Size Guide
                 </span>
               </div>
               <div className="flex flex-wrap gap-2.5">
-                {(product.sizes && product.sizes.length > 0 ? product.sizes : ['S', 'M', 'L', 'XL']).map((sz) => (
-                  <button
-                    key={sz}
-                    onClick={() => setSelectedSize(sz)}
-                    className={`min-w-[48px] h-12 px-3 rounded-2xl text-xs font-extrabold transition-all border ${
-                      selectedSize === sz
-                        ? 'bg-plum text-white border-plum shadow-md shadow-plum/20 scale-102'
-                        : 'bg-white text-ink border-subtle hover:bg-bone hover:border-muted'
-                    }`}
-                  >
-                    {sz}
-                  </button>
-                ))}
+                {(product.sizes && product.sizes.length > 0 ? product.sizes : ['S', 'M', 'L', 'XL']).map((sz) => {
+                  const isSelected = selectedSize === sz;
+                  return (
+                    <button
+                      key={sz}
+                      onClick={() => setSelectedSize(sz)}
+                      className="min-w-[48px] h-12 px-3 rounded-2xl text-xs font-extrabold transition-all border flex items-center justify-center cursor-pointer shadow-xs"
+                      style={
+                        isSelected
+                          ? { backgroundColor: '#6E2A3A', color: '#FFFFFF', borderColor: '#6E2A3A' }
+                          : { backgroundColor: '#FFFFFF', color: '#1C1B19', borderColor: '#E7E2DB' }
+                      }
+                    >
+                      {sz}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* Quantity Selector */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-2" style={{ color: '#1C1B19' }}>
                 Quantity
               </label>
               <div className="flex items-center gap-3 w-36 bg-bone p-1 rounded-2xl border border-subtle">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="w-9 h-9 rounded-xl bg-white text-ink font-bold shadow-sm hover:bg-gray-100 flex items-center justify-center text-sm"
+                  style={{ backgroundColor: '#FFFFFF', color: '#1C1B19' }}
                 >
                   -
                 </button>
-                <span className="flex-1 text-center text-xs font-extrabold font-mono text-ink">{quantity}</span>
+                <span className="flex-1 text-center text-xs font-extrabold font-mono text-ink" style={{ color: '#1C1B19' }}>{quantity}</span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
                   className="w-9 h-9 rounded-xl bg-white text-ink font-bold shadow-sm hover:bg-gray-100 flex items-center justify-center text-sm"
+                  style={{ backgroundColor: '#FFFFFF', color: '#1C1B19' }}
                 >
                   +
                 </button>
               </div>
             </div>
 
-            <div className="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex items-center gap-3 text-xs text-success font-semibold">
-              <Truck className="w-5 h-5 text-success shrink-0" />
-              <span>Express Delivery Available. Estimated arrival in <strong>2 business days</strong>.</span>
+            {/* Delivery Info */}
+            <div
+              className="p-3.5 rounded-2xl flex items-center gap-3 text-xs font-semibold border"
+              style={{ backgroundColor: '#EBF7F1', color: '#1B4D3E', borderColor: '#C2E8D5' }}
+            >
+              <Truck className="w-5 h-5 shrink-0" style={{ color: '#1B4D3E' }} />
+              <span style={{ color: '#1B4D3E' }}>
+                Express Delivery Available. Estimated arrival in <strong>2 business days</strong>.
+              </span>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch gap-3 pt-4 border-t border-subtle">
               <button
                 onClick={handleAddToCart}
-                className="flex-1 py-4 bg-plum hover:bg-plum-hover text-white rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-plum/20 transition-all hover:scale-102"
+                className="flex-1 py-4 rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl hover:scale-102 transition-all cursor-pointer"
+                style={{ backgroundColor: '#6E2A3A', color: '#FFFFFF' }}
               >
-                <ShoppingBag className="w-4 h-4" /> Add to Cart
+                <ShoppingBag className="w-4 h-4 text-white" /> Add to Cart
               </button>
 
               <button
@@ -228,7 +241,8 @@ export const ProductDetailPage: React.FC = () => {
                   handleAddToCart();
                   navigate('/cart');
                 }}
-                className="flex-1 py-4 bg-ink hover:bg-plum text-white rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-102"
+                className="flex-1 py-4 rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl hover:scale-102 transition-all cursor-pointer"
+                style={{ backgroundColor: '#1C1B19', color: '#FFFFFF' }}
               >
                 Buy Now
               </button>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Heart, Bell, Cpu, Sparkles, X, ArrowRight, Flame, History, ChevronDown } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Bell, Sparkles, X, ArrowRight, Flame, History, ChevronDown } from 'lucide-react';
 import { useNowCartStore } from '../store/useNowCartStore';
 
 export const Navbar: React.FC = () => {
@@ -16,6 +16,8 @@ export const Navbar: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const searchRef = useRef<HTMLDivElement>(null);
   const categoryRef = useRef<HTMLDivElement>(null);
 
@@ -43,14 +45,30 @@ export const Navbar: React.FC = () => {
         setIsCategoryOpen(false);
       }
     };
-    const handleScroll = () => setIsScrolled(window.scrollY > 4);
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 10);
+
+      if (currentScrollY > 50) {
+        if (currentScrollY > lastScrollY + 5) {
+          setIsVisible(false); // Scroll down -> slide out
+        } else if (currentScrollY < lastScrollY - 5) {
+          setIsVisible(true); // Scroll up -> slide back in
+        }
+      } else {
+        setIsVisible(true);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [lastScrollY]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,7 +93,11 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className={`sticky top-0 z-40 bg-bone border-b border-subtle h-[80px] flex items-center transition-shadow duration-200 ${isScrolled ? 'shadow-sm' : 'shadow-none'}`}>
+    <header
+      className={`sticky top-0 z-40 bg-bone border-b border-subtle h-[80px] flex items-center transition-all duration-300 ease-in-out ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      } ${isScrolled ? 'shadow-sm' : 'shadow-none'}`}
+    >
       <div className="max-content-width w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-6 h-full">
           
@@ -88,9 +110,6 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center gap-1.5">
                 <span className="text-2xl font-black tracking-tight text-ink font-sans">
                   Now<span className="text-plum">Cart</span>
-                </span>
-                <span className="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-gold-light text-gold rounded-full border border-gold/30">
-                  AI Live
                 </span>
               </div>
             </Link>
@@ -236,10 +255,10 @@ export const Navbar: React.FC = () => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
               className="hidden md:flex items-center gap-1.5 px-3.5 py-2 bg-plum-light hover:bg-plum-light/80 text-plum border border-plum/20 rounded-full text-xs font-extrabold transition-all shadow-sm"
-              title="Open Live AI Reasoning Panel"
+              title="Open Personal Style & Recommendations Panel"
             >
-              <Cpu className="w-4 h-4 text-plum animate-pulse" />
-              <span>AI Panel</span>
+              <Sparkles className="w-4 h-4 text-plum shrink-0" />
+              <span>For You</span>
             </motion.button>
 
             <Link to="/wishlist">
@@ -248,9 +267,12 @@ export const Navbar: React.FC = () => {
                 className="p-2.5 text-ink hover:text-error hover:bg-bone rounded-full relative transition-colors"
                 title="Wishlist"
               >
-                <Heart className="w-5 h-5" />
+                <Heart className="w-5 h-5 text-ink hover:text-error" />
                 {wishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-error text-white rounded-full text-[10px] font-black flex items-center justify-center shadow">
+                  <span
+                    className="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full text-[11px] font-black flex items-center justify-center shadow-md z-10"
+                    style={{ backgroundColor: '#A6402A', color: '#FFFFFF' }}
+                  >
                     {wishlistCount}
                   </span>
                 )}
@@ -258,8 +280,11 @@ export const Navbar: React.FC = () => {
             </Link>
 
             <div className="p-2.5 text-ink hover:text-plum hover:bg-bone rounded-full relative transition-colors hidden sm:block">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-plum rounded-full" />
+              <Bell className="w-5 h-5 text-ink hover:text-plum" />
+              <span
+                className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full"
+                style={{ backgroundColor: '#6E2A3A' }}
+              />
             </div>
 
             <Link to="/cart">
@@ -268,12 +293,13 @@ export const Navbar: React.FC = () => {
                 className="p-2.5 text-ink hover:text-plum hover:bg-bone rounded-full relative transition-colors"
                 title="Shopping Cart"
               >
-                <ShoppingBag className="w-5 h-5" />
+                <ShoppingBag className="w-5 h-5 text-ink hover:text-plum" />
                 {cartCount > 0 && (
                   <motion.span
                     initial={{ scale: 0.5 }}
                     animate={{ scale: [1, 1.3, 1] }}
-                    className="absolute top-1 right-1 w-4 h-4 bg-plum text-white rounded-full text-[10px] font-black flex items-center justify-center shadow"
+                    className="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full text-[11px] font-black flex items-center justify-center shadow-md z-10"
+                    style={{ backgroundColor: '#6E2A3A', color: '#FFFFFF' }}
                   >
                     {cartCount}
                   </motion.span>
@@ -281,7 +307,10 @@ export const Navbar: React.FC = () => {
               </motion.div>
             </Link>
 
-            <div className="w-9 h-9 rounded-full bg-ink text-white font-extrabold text-xs flex items-center justify-center shadow-md cursor-pointer">
+            <div
+              className="w-9 h-9 rounded-full font-extrabold text-xs flex items-center justify-center shadow-md cursor-pointer hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: '#1C1B19', color: '#FFFFFF' }}
+            >
               NC
             </div>
 

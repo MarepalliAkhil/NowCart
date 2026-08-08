@@ -26,22 +26,24 @@ export const WishlistPage: React.FC = () => {
 
         <Link
           to="/"
-          className="flex items-center gap-2 text-xs font-bold text-plum hover:underline"
+          className="flex items-center gap-2 text-xs font-bold transition-colors cursor-pointer"
+          style={{ color: '#6E2A3A' }}
         >
-          <ArrowLeft className="w-4 h-4" /> Continue Browsing
+          <ArrowLeft className="w-4 h-4" style={{ color: '#6E2A3A' }} /> Continue Browsing
         </Link>
       </div>
 
       {wishlistedProducts.length === 0 ? (
         <div className="text-center py-24 bg-white border border-subtle rounded-3xl p-12 space-y-4 shadow-sm">
-          <Heart className="w-16 h-16 text-muted mx-auto stroke-1" />
-          <h2 className="text-xl font-bold text-ink">Your wishlist is empty</h2>
-          <p className="text-xs text-muted max-w-sm mx-auto">
+          <Heart className="w-16 h-16 text-muted mx-auto stroke-1" style={{ color: '#6B665F' }} />
+          <h2 className="text-xl font-bold text-ink" style={{ color: '#1C1B19' }}>Your wishlist is empty</h2>
+          <p className="text-xs text-muted max-w-sm mx-auto" style={{ color: '#6B665F' }}>
             Click the heart icon on any product card to save your favorite styles here!
           </p>
           <Link
             to="/"
-            className="inline-block px-8 py-3.5 bg-plum hover:bg-plum-hover text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl shadow-lg hover:scale-105 transition-all"
+            className="inline-block px-8 py-3.5 rounded-2xl shadow-lg hover:scale-105 transition-all font-extrabold text-xs uppercase tracking-wider cursor-pointer"
+            style={{ backgroundColor: '#6E2A3A', color: '#FFFFFF' }}
           >
             Discover Fashion Styles
           </Link>

@@ -30,11 +30,12 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
             onClick={() => onSelectCategory(cat)}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
-            className={`px-5 py-2.5 rounded-full text-xs font-extrabold tracking-wider transition-all shrink-0 border ${
+            className="px-5 py-2.5 rounded-full text-xs font-extrabold tracking-wider transition-all shrink-0 border shadow-xs"
+            style={
               isSelected
-                ? 'bg-ink text-white border-ink shadow-md'
-                : 'bg-white text-ink border-subtle hover:border-plum hover:text-plum'
-            }`}
+                ? { backgroundColor: '#6E2A3A', color: '#FFFFFF', borderColor: '#6E2A3A' }
+                : { backgroundColor: '#FFFFFF', color: '#1C1B19', borderColor: '#E7E2DB' }
+            }
           >
             {cat}
           </motion.button>

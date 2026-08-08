@@ -25,28 +25,35 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setCanScrollLeft(scrollLeft > 5);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5);
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10 || scrollWidth === 0);
     }
   };
 
   useEffect(() => {
     checkScroll();
+    const timer = setTimeout(checkScroll, 500); // Check again after layout stabilizes
     const el = scrollRef.current;
     if (el) {
       el.addEventListener('scroll', checkScroll);
       window.addEventListener('resize', checkScroll);
     }
     return () => {
+      clearTimeout(timer);
       if (el) el.removeEventListener('scroll', checkScroll);
       window.removeEventListener('resize', checkScroll);
     };
   }, [products]);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const handleScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -340 : 340;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      const scrollAmount = direction === 'left' ? -380 : 380;
+      try {
+        scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      } catch {
+        scrollRef.current.scrollLeft += scrollAmount;
+      }
+      setTimeout(checkScroll, 400);
     }
   };
 
@@ -69,14 +76,13 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
           {subtitle && <p className="text-xs text-muted font-medium mt-1">{subtitle}</p>}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 z-10">
           <button
-            onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
-            className={`p-3 rounded-full border transition-all shadow-sm ${
+            onClick={() => handleScroll('left')}
+            className={`p-3 rounded-full border transition-all shadow-sm flex items-center justify-center ${
               canScrollLeft
-                ? 'bg-white border-subtle hover:bg-plum-light hover:text-plum text-ink shadow-sm cursor-pointer'
-                : 'bg-bone border-subtle text-muted cursor-not-allowed opacity-50'
+                ? 'bg-white border-subtle hover:bg-plum hover:text-white text-ink shadow-md cursor-pointer'
+                : 'bg-bone border-subtle text-muted cursor-pointer opacity-60 hover:bg-subtle'
             }`}
             title="Scroll Left"
           >
@@ -84,12 +90,11 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
           </button>
 
           <button
-            onClick={() => scroll('right')}
-            disabled={!canScrollRight}
-            className={`p-3 rounded-full border transition-all shadow-sm ${
+            onClick={() => handleScroll('right')}
+            className={`p-3 rounded-full border transition-all shadow-sm flex items-center justify-center ${
               canScrollRight
-                ? 'bg-white border-subtle hover:bg-plum-light hover:text-plum text-ink shadow-sm cursor-pointer'
-                : 'bg-bone border-subtle text-muted cursor-not-allowed opacity-50'
+                ? 'bg-white border-subtle hover:bg-plum hover:text-white text-ink shadow-md cursor-pointer'
+                : 'bg-bone border-subtle text-muted cursor-pointer opacity-60 hover:bg-subtle'
             }`}
             title="Scroll Right"
           >
@@ -100,7 +105,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
       <div
         ref={scrollRef}
-        className="flex items-stretch gap-6 overflow-x-auto no-scrollbar py-3 -mx-2 px-2"
+        className="flex items-stretch gap-6 overflow-x-auto no-scrollbar py-3 -mx-2 px-2 scroll-smooth"
       >
         {products.map((product) => (
           <div key={product.product_id} className="w-[280px] sm:w-[300px] shrink-0">
