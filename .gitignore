@@ -69,3 +69,6 @@ data/processed/*
 *.bin
 *.onnx
 *.faiss
+
+.vercel
+.env*
